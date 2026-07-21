@@ -1,0 +1,3 @@
+# Preserva as quebras de linha originais — não converte nada.
+# Evita qualquer alteração no HTML e no .bat.
+* -text
