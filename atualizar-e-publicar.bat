@@ -7,7 +7,7 @@ echo   PUBLICANDO PLEXO 360
 echo ============================================
 echo.
 
-echo [1/4] Copiando versao mais recente do Desktop...
+echo [1/5] Copiando versao mais recente do Desktop...
 copy /Y "C:\Users\Anderson\Desktop\Plexo360 (3).html" "index.html" >nul
 if errorlevel 1 (
   echo ERRO: nao encontrei "Plexo360 (3).html" no Desktop.
@@ -15,29 +15,36 @@ if errorlevel 1 (
   exit /b 1
 )
 
-echo [2/4] Incrementando versao do cache (service-worker)...
+echo [2/5] Incrementando versao do cache (service-worker)...
 powershell -NoProfile -Command "$sw = Get-Content 'service-worker.js' -Raw; if ($sw -match 'plexo360-v(\d+)') { $n = [int]$Matches[1] + 1; $sw = $sw -replace 'plexo360-v\d+', ('plexo360-v' + $n); Set-Content 'service-worker.js' -Value $sw -NoNewline -Encoding UTF8; Write-Host ('      cache -> plexo360-v' + $n) }"
 
-echo [3/4] Registrando alteracoes...
+echo [3/5] Publicando no Cloudflare (site no ar)...
+call npx wrangler pages deploy . --project-name=plexo360 --branch=main --commit-dirty=true
+if errorlevel 1 (
+  echo.
+  echo ERRO ao publicar no Cloudflare. Verifique sua conexao.
+  echo Se pedir login, rode: npx wrangler login
+  pause
+  exit /b 1
+)
+
+echo [4/5] Salvando backup/historico no GitHub...
 git add -A
 git commit -m "Atualizacao Plexo 360 - %date% %time%" >nul 2>&1
 if errorlevel 1 (
-  echo      Nada novo para publicar ^(sem alteracoes^).
+  echo      Nada novo no historico ^(sem alteracoes^).
 )
 
-echo [4/4] Enviando ao GitHub ^(Cloudflare publica sozinho^)...
-git push
+echo [5/5] Enviando ao GitHub...
+git push >nul 2>&1
 if errorlevel 1 (
-  echo.
-  echo ERRO ao enviar. Verifique sua conexao ou login do GitHub.
-  pause
-  exit /b 1
+  echo      Aviso: nao consegui enviar ao GitHub ^(o site ja esta no ar^).
 )
 
 echo.
 echo ============================================
 echo   PUBLICADO COM SUCESSO!
-echo   O Cloudflare atualiza em ~1 minuto.
+echo   O site ja esta no ar.
 echo   Link: https://plexo360.pages.dev
 echo ============================================
 echo.
