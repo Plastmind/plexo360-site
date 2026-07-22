@@ -1,4 +1,4 @@
-const CACHE_NAME = 'plexo360-v20';
+const CACHE_NAME = 'plexo360-v21';
 const ASSETS = [
   './',
   './index.html',
