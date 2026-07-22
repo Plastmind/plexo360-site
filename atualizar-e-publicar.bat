@@ -15,8 +15,8 @@ if errorlevel 1 (
   exit /b 1
 )
 
-echo [2/5] Incrementando versao do cache (service-worker)...
-powershell -NoProfile -Command "$sw = Get-Content 'service-worker.js' -Raw; if ($sw -match 'plexo360-v(\d+)') { $n = [int]$Matches[1] + 1; $sw = $sw -replace 'plexo360-v\d+', ('plexo360-v' + $n); Set-Content 'service-worker.js' -Value $sw -NoNewline -Encoding UTF8; Write-Host ('      cache -> plexo360-v' + $n) }"
+echo [2/5] Incrementando versao (service-worker + rotulo visivel)...
+powershell -NoProfile -Command "$sw = Get-Content 'service-worker.js' -Raw; if ($sw -match 'plexo360-v(\d+)') { $n = [int]$Matches[1] + 1; $sw = $sw -replace 'plexo360-v\d+', ('plexo360-v' + $n); Set-Content 'service-worker.js' -Value $sw -NoNewline -Encoding UTF8; $h = Get-Content 'index.html' -Raw; $h = $h -replace 'Plexo 360 . v\d+<', ('Plexo 360 ' + [char]0x00B7 + ' v' + $n + '<'); Set-Content 'index.html' -Value $h -NoNewline -Encoding UTF8; Write-Host ('      versao -> v' + $n) }"
 
 echo [3/5] Publicando no Cloudflare (site no ar)...
 call npx wrangler pages deploy . --project-name=plexo360 --branch=main --commit-dirty=true
