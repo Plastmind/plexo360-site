@@ -1,4 +1,4 @@
-const CACHE_NAME = 'plexo360-v30';
+﻿const CACHE_NAME = 'plexo360-v31';
 const ASSETS = [
   './',
   './index.html',
@@ -41,7 +41,7 @@ self.addEventListener('fetch', function(e) {
     return;
   }
 
-  // Documento HTML / navegacao: SEMPRE rede primeiro — garante a versao mais recente do app.
+  // Documento HTML / navegacao: SEMPRE rede primeiro â€” garante a versao mais recente do app.
   // Cai para o cache apenas se estiver offline.
   var isDoc = e.request.mode === 'navigate' || url.endsWith('/') || url.endsWith('index.html');
   if (isDoc) {
